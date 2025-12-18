@@ -1,0 +1,68 @@
+[gd_scene load_steps=13 format=3 uid="uid://0ltnq8xvv0h0"]
+
+[ext_resource type="Shader" uid="uid://j4oanbm3p4s4" path="res://addons/GPUTrail-main_june/shaders/trail.gdshader" id="2_t4wd0"]
+[ext_resource type="Shader" uid="uid://cufyiuglnyids" path="res://addons/GPUTrail-main_june/shaders/trail_draw_pass.gdshader" id="3_j8aw3"]
+[ext_resource type="Script" uid="uid://dl655td1mg8p5" path="res://addons/GPUTrail-main_june/GPUTrail3D.gd" id="4_f2pop"]
+
+[sub_resource type="GDScript" id="GDScript_ag3k0"]
+script/source = "extends Area3D
+
+var speed = 120
+# Called when the node enters the scene tree for the first time.
+func _physics_process(delta: float) -> void:
+	position += transform.basis * Vector3(0, 0, -speed) * delta
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_tqo1u"]
+radius = 0.27856046
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q7htu"]
+shader = ExtResource("2_t4wd0")
+
+[sub_resource type="Gradient" id="Gradient_jgus7"]
+colors = PackedColorArray(1, 1, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_m8e80"]
+gradient = SubResource("Gradient_jgus7")
+
+[sub_resource type="Curve" id="Curve_uj16y"]
+bake_resolution = 16
+_data = [Vector2(0, 0.15953314), 0.0, 0.0, 0, 0, Vector2(1, 0.1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_f24mc"]
+curve = SubResource("Curve_uj16y")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ki4i4"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_j8aw3")
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/color_ramp = SubResource("GradientTexture1D_m8e80")
+shader_parameter/curve = SubResource("CurveTexture_f24mc")
+shader_parameter/emmission_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/flags = 40
+
+[sub_resource type="QuadMesh" id="QuadMesh_bypbg"]
+material = SubResource("ShaderMaterial_ki4i4")
+
+[node name="Area3D" type="Area3D"]
+script = SubResource("GDScript_ag3k0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_tqo1u")
+
+[node name="GPUTrail3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07319605, 0, 0)
+amount = 100
+lifetime = 100.0
+explosiveness = 1.0
+fixed_fps = 59
+process_material = SubResource("ShaderMaterial_q7htu")
+draw_pass_1 = SubResource("QuadMesh_bypbg")
+script = ExtResource("4_f2pop")
+length_seconds = 1.694915254237288
+color_ramp = SubResource("GradientTexture1D_m8e80")
+curve = SubResource("CurveTexture_f24mc")
+_defaults_have_been_set = true
+metadata/_custom_type_script = "uid://dl655td1mg8p5"

@@ -1,0 +1,138 @@
+[gd_scene load_steps=6 format=3 uid="uid://cle78ys75wcyf"]
+
+[ext_resource type="PackedScene" uid="uid://yj81bqcm7paa" path="res://espada.tscn" id="1_iwpo4"]
+
+[sub_resource type="GDScript" id="GDScript_bu0v1"]
+script/source = "extends CharacterBody3D
+
+@onready var marker: Marker3D = $HeadY/HeadX/MeshInstance3D2/Marker3D
+@onready var camera: Camera3D = %Camera3D
+@onready var headY: Node3D = %HeadY
+@onready var headX: Node3D = %HeadX
+const BALA = preload(\"uid://0ltnq8xvv0h0\")
+@onready var particles: GPUParticles3D = $HeadY/HeadX/MeshInstance3D2/Marker3D/GPUParticles3D
+@onready var ray_cast_3d: RayCast3D = $HeadY/HeadX/RayCast3D
+@onready var dash_duration: Timer = $Timer
+@onready var weapon: Node3D = %Weapon
+
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+
+const SPEED = 6.0
+const JUMP_VELOCITY = 4.5
+
+# Dash tuning
+var dash_speed: float = 30.0    
+var speed_multiplier: float = 1.0
+var dash_smoothness: float = 40.0      
+var is_dashing: bool = false
+var dash_target_velocity: Vector3 = Vector3.ZERO
+
+var sensibilidade: float = 0.01
+
+func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	dash_duration.connect(\"timeout\", Callable(self, \"_on_dash_timeout\"))
+
+func _on_dash_timeout() -> void:
+	is_dashing = false
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		headY.rotate_y(-event.relative.x * sensibilidade)
+		headX.rotate_x(-event.relative.y * sensibilidade)
+		headX.rotation.x = clamp(headX.rotation.x, deg_to_rad(-40), deg_to_rad(60))
+	
+	if event.is_action_pressed(\"pulo\"):
+		velocity.y += 13.67
+		
+	if event.is_action_pressed(\"click\"):
+		weapon.get_child(0).attack()
+	elif event.is_action_pressed(\"click_direito\"):
+		weapon.get_child(0).attack_direito()
+
+	#var tiro = BALA.instantiate()
+	#particles.emitting = true
+	#get_tree().current_scene.add_child(tiro)
+	#tiro.global_transform = marker.global_transform
+
+func _physics_process(delta: float) -> void:
+
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	velocity.y -= 9.8 * delta
+
+	var input_dir := Input.get_vector(\"ui_left\", \"ui_right\", \"ui_up\", \"ui_down\")
+	var direction: Vector3 = (headY.transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+
+	if Input.is_action_just_pressed(\"dash\"):
+		if dash_duration.is_stopped():
+			var dir_for_dash := direction
+			if dir_for_dash == Vector3.ZERO:
+				dir_for_dash = -camera.global_transform.basis.z
+			dir_for_dash = dir_for_dash.normalized()
+			dash_target_velocity = dir_for_dash * dash_speed * speed_multiplier
+			is_dashing = true
+			dash_duration.start()
+
+	if is_dashing:
+
+		var horizontal_current := Vector3(velocity.x, 0, velocity.z)
+		var factor = clamp(dash_smoothness * delta, 0.0, 1.0)
+		horizontal_current = lerp(horizontal_current, dash_target_velocity, factor)
+		velocity.x = horizontal_current.x
+		velocity.z = horizontal_current.z
+	else:
+		if direction != Vector3.ZERO:
+			velocity.x = direction.x * SPEED
+			velocity.z = direction.z * SPEED
+		else:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.z = move_toward(velocity.z, 0, SPEED)
+
+	move_and_slide()
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iwpo4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_fb3t6"]
+material = SubResource("StandardMaterial3D_iwpo4")
+size = Vector3(0.5, 1, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vd578"]
+size = Vector3(0.53234863, 1.0803223, 0.5410156)
+
+[node name="CharacterBody3D" type="CharacterBody3D" groups=["player"]]
+script = SubResource("GDScript_bu0v1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_fb3t6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0064086914, -0.040161133, 0.0009765625)
+shape = SubResource("BoxShape3D_vd578")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HeadY" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="HeadX" type="Node3D" parent="HeadY"]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="HeadY/HeadX"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29776418, -0.07010114)
+current = true
+
+[node name="RayCast3D" type="RayCast3D" parent="HeadY/HeadX"]
+target_position = Vector3(0, 0, -50)
+
+[node name="Weapon" type="Node3D" parent="HeadY/HeadX"]
+unique_name_in_owner = true
+
+[node name="Espada" parent="HeadY/HeadX/Weapon" instance=ExtResource("1_iwpo4")]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true

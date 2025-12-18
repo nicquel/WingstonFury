@@ -1,0 +1,295 @@
+[gd_scene load_steps=16 format=3 uid="uid://yj81bqcm7paa"]
+
+[ext_resource type="AudioStream" uid="uid://dpw4u50j58wod" path="res://Som de acerto de espada.wav" id="1_740t4"]
+[ext_resource type="PackedScene" uid="uid://cx1w7xd5wojiv" path="res://espada.glb" id="1_g856d"]
+[ext_resource type="Script" uid="uid://c0y0dai06mntx" path="res://DamageDealer.gd" id="1_xvmcj"]
+[ext_resource type="AudioStream" uid="uid://biwceutgcx4bp" path="res://Som de espada.wav" id="2_5xcw1"]
+[ext_resource type="AudioStream" uid="uid://cge86xfj8bxgc" path="res://Som de apito e flash.wav" id="2_xvmcj"]
+
+[sub_resource type="GDScript" id="GDScript_5xcw1"]
+resource_name = "espada"
+script/source = "extends Hitbox
+
+@onready var animation_player: AnimationPlayer = %AnimationPlayer
+@onready var collision: CollisionShape3D = $CollisionShape3D
+@onready var som_de_acerto_de_espada: AudioStreamPlayer3D = $SomDeAcertoDeEspada
+@onready var som_de_apito_e_flash: AudioStreamPlayer3D = $SomDeApitoEFlash
+
+func attack() -> void:
+	animation_player.play(\"Ataque\")
+	
+func attack_direito() -> void:
+	animation_player.play(\"direito\")
+	
+func extras(victim: Area3D):
+	som_de_acerto_de_espada.play()
+"
+
+[sub_resource type="Resource" id="Resource_4tc2h"]
+script = ExtResource("1_xvmcj")
+metadata/_custom_type_script = "uid://c0y0dai06mntx"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g856d"]
+size = Vector3(0.19433594, 0.8973999, 0.15863037)
+
+[sub_resource type="Animation" id="Animation_olrou"]
+resource_name = "Ataque"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.33333334, 0.53333336, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5707964, 0), Vector3(0.6628411, 1.5707964, 3.4124053e-08), Vector3(0.991347, 2.0909045, -0.8045968), Vector3(1.2531464, 3.0735247, -0.81332344), Vector3(0, 1.5707964, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.33333334, 0.53333336, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.41, -0.2, -0.47), Vector3(0.29, -0.06, -0.47), Vector3(0.33, -0.041, -0.47), Vector3(0.41, -0.2, -0.47)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AudioStreamPlayer3D:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CollisionShape3D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hitbox/CollisionShape3D2:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_740t4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape3D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SomDeApitoEFlash:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpotLight3D:light_energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SpotLight3D:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hitbox/CollisionShape3D2:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_xvmcj"]
+resource_name = "direito"
+length = 1.45
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SomDeApitoEFlash:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SpotLight3D:light_energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.56666666, 0.90000004, 0.9666667, 1.0333334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.0, 0.0, 16.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SpotLight3D:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.45),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hitbox/CollisionShape3D2:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xvmcj"]
+_data = {
+&"Ataque": SubResource("Animation_olrou"),
+&"RESET": SubResource("Animation_740t4"),
+&"direito": SubResource("Animation_xvmcj")
+}
+
+[sub_resource type="GDScript" id="GDScript_xvmcj"]
+script/source = "extends Hitbox
+
+
+func extras(victim: Area3D) -> void:
+	if victim is Hurtbox:
+		var victim_speed = victim.target.SPEED
+		victim.target.SPEED = 0.0
+		hurt(victim)
+		await get_tree().create_timer(1.0).timeout
+		victim.target.SPEED = victim_speed
+		return
+"
+
+[sub_resource type="Resource" id="Resource_xvmcj"]
+script = ExtResource("1_xvmcj")
+metadata/_custom_type_script = "uid://c0y0dai06mntx"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_740t4"]
+size = Vector3(4.5910645, 1.800225, 4.2324853)
+
+[node name="Espada" type="Area3D"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.41, -0.2, -0.47)
+script = SubResource("GDScript_5xcw1")
+damage_dealer = SubResource("Resource_4tc2h")
+
+[node name="SomDeAcertoDeEspada" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("1_740t4")
+
+[node name="SomDeApitoEFlash" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_xvmcj")
+
+[node name="espada" parent="." instance=ExtResource("1_g856d")]
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.0499998, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0234375, 0.3656311, -0.008148193)
+shape = SubResource("BoxShape3D_g856d")
+disabled = true
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("2_5xcw1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_xvmcj")
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.090719536, 0, -0.9958765, 0, 1, 0, 0.9958765, 0, -0.090719536, 0.047664404, 0.24400952, 0)
+visible = false
+light_energy = 0.0
+spot_angle = 62.281105
+
+[node name="Hitbox" type="Area3D" parent="."]
+script = SubResource("GDScript_xvmcj")
+damage_dealer = SubResource("Resource_xvmcj")
+metadata/_custom_type_script = "uid://b2krxoljv5r7o"
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3270263, 0.4353611, -2.1857429)
+shape = SubResource("BoxShape3D_740t4")
+disabled = true
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="on_damaged" from="Hitbox" to="." method="_on_hitbox_on_damaged"]

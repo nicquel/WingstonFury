@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3 uid="uid://bq18cemqnulin"]
+
+[ext_resource type="PackedScene" uid="uid://cle78ys75wcyf" path="res://character_body_3d.tscn" id="1_6puu3"]
+[ext_resource type="Texture2D" uid="uid://b0telmv61isw6" path="res://60468bdf09bb730bf92f670b_de_dust2.png" id="3_dj1ia"]
+[ext_resource type="PackedScene" uid="uid://k8hgmfmv5vt2" path="res://lokis.tscn" id="3_q2vu2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dj1ia"]
+
+[sub_resource type="Sky" id="Sky_fihne"]
+sky_material = SubResource("ProceduralSkyMaterial_dj1ia")
+
+[sub_resource type="Environment" id="Environment_6puu3"]
+background_mode = 2
+sky = SubResource("Sky_fihne")
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_q2vu2"]
+vertices = PackedVector3Array(-287.36145, -0.44664252, -215.79785, -287.36145, -0.44664252, 135.20215, 133.63855, -0.44664252, 135.20215, 133.63855, -0.44664252, -215.79785)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q2vu2"]
+albedo_texture = ExtResource("3_dj1ia")
+metallic = 1.0
+metallic_specular = 0.0
+
+[node name="VizinhoGay" type="Node3D"]
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_6puu3")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6puu3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.07875492, 0.996894, 0, -0.996894, -0.07875492, 0, 14.450449, 0)
+
+[node name="CharacterBody3D2" parent="." instance=ExtResource("3_q2vu2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.252632, 0, 0)
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_q2vu2")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -76.86145, -1.4466425, -40.29785)
+use_collision = true
+size = Vector3(422, 1, 352)
+material = SubResource("StandardMaterial3D_q2vu2")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9926147, 2.211975, -5.8704834)
+size = Vector3(6.9852295, 5.42395, 2.011963)
