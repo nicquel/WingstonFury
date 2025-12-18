@@ -45,5 +45,5 @@ size = Vector3(422, 1, 352)
 material = SubResource("StandardMaterial3D_q2vu2")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9926147, 2.211975, -5.8704834)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.9926147, 2.211975, -28.309883)
 size = Vector3(6.9852295, 5.42395, 2.011963)
